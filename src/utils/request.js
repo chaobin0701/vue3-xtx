@@ -3,12 +3,12 @@
 // 3. 响应拦截器：1. 剥离无效数据  2. 处理token失效
 // 4. 导出一个函数，调用当前
 
-import { axios } from 'axios'
+import axios from 'axios'
 import store from '@/store'
 import router from '@/router'
 export const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
 
-const instance = axios.create({
+const instance =  axios.create({
   // axios 的一些配置,baseURL timeout
   baseURL,
   timeout: 5000

@@ -1,14 +1,15 @@
 <template>
-  <div>
-    <div>{{ $store.state.user.profile.nickname }}</div>
-    <button @click="$store.commit('user/setName', 'zhangsan')">
-      点我改变名字
-    </button>
-  </div>
+<!-- 一级路由 -->
+  <router-view></router-view>
 </template>
 
 <script>
+import request from '@/utils/request'
+export default {
+  name:'App'
+}
 </script>
 
 <style lang="less">
+
 </style>
