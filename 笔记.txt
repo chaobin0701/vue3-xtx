@@ -1,1 +1,10 @@
 687 vuex持久化存储 - vuex-persistedstate
+
+
+
+
+
+错误笔记
+ 1. 错误提示:Cannot use 'in' operator to search for 'path' in undefined
+    释义:无法使用“in”运算符在未定义中搜索“path”
+    原因:使用了router-link 但是没有指定 to 就会报错
