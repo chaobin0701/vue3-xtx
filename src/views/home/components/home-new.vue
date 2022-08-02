@@ -1,22 +1,27 @@
 <template>
     <div class="home-new">
-        <HomePanel title="新鲜好物" subTitle="新鲜出炉 品质靠谱">
+        <HomePanel title="新鲜好物" subTitle="新鲜出炉 品质靠谱" ref="box">
             <!-- 查看全部 -->
             <template #right>
                 <XtxMore path="/"></XtxMore>
             </template>
             <!-- 主要内容 -->
             <template #main>
-            <ul class="goods-list">
-                <li v-for="item in goods" :key="item.id">
-                    <!-- <RouterLink :to="`/product/${item.id}`"> -->
-                    <RouterLink to="/">
-                        <img :src="item.picture" alt="">
-                        <p class="name ellipsis">{{ item.name }}</p>
-                        <p class="price">&yen;{{ item.price }}</p>
-                    </RouterLink>
-                </li>
-            </ul>
+                <div ref="target" style="position: relative; height: 406px;">
+                    <transition class="fade">
+                        <ul v-if="goods.length" ref="panel" class="goods-list">
+                            <li v-for="item in goods" :key="item.id">
+                                <!-- <RouterLink :to="`/product/${item.id}`"> -->
+                                <RouterLink to="/">
+                                    <img :src="item.picture" alt="">
+                                    <p class="name ellipsis">{{ item.name }}</p>
+                                    <p class="price">&yen;{{ item.price }}</p>
+                                </RouterLink>
+                            </li>
+                        </ul>
+                        <HomeSkeleton v-else></HomeSkeleton>
+                    </transition>
+                </div>
             </template>
         </HomePanel>
     </div>
@@ -24,13 +29,15 @@
     
 <script>export default { name: 'HomeNew' }</script>
 <script setup>
+import HomeSkeleton from './home-skeleton.vue' //骨架屏组件
+import HomePanel from './home-panel.vue'  // 框架组件
+
 import { ref } from 'vue'
-import HomePanel from './home-panel.vue'
-import { findNew } from '@/api/home'
-const goods = ref([])
-findNew().then(data => {
-    goods.value = data.result
-})
+import {useLazyData} from '@/hooks' // useLazyData => 懒加载方法
+import { findNew } from '@/api/home' // 获取新鲜好物数据
+const { target, result} = useLazyData(findNew)
+const goods = ref(result)
+
 
 </script>
     
