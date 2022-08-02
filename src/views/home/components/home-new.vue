@@ -35,8 +35,7 @@ import HomePanel from './home-panel.vue'  // 框架组件
 import { ref } from 'vue'
 import {useLazyData} from '@/hooks' // useLazyData => 懒加载方法
 import { findNew } from '@/api/home' // 获取新鲜好物数据
-const { target, result} = useLazyData(findNew)
-const goods = ref(result)
+const { target, result:goods} = useLazyData(findNew)
 
 
 </script>

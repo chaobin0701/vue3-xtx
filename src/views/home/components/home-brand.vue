@@ -35,8 +35,7 @@ import { ref } from 'vue'
 
 
 
-const { target, result } = useLazyData(() => findBrand(10))
-const brands = ref(result)
+const { target, result:brands } = useLazyData(() => findBrand(10))
 
 // 切换效果,前提是只有 0 和 1 两页
 const index = ref(0)

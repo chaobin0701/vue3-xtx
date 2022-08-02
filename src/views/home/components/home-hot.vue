@@ -28,8 +28,7 @@ import HomePanel from './home-panel.vue' // 框架组件
 import {useLazyData} from '@/hooks' // useLazyData => 懒加载方法
 import { ref } from 'vue'
 import { findHot } from '@/api/home' // 获取人气推荐数据
-const { target,result } = useLazyData(findHot)
-const goods = ref(result)
+const { target,result:goods } = useLazyData(findHot)
 </script>
     
 

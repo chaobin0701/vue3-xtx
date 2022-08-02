@@ -20,3 +20,13 @@ export const findNew = () => {
 export const findHot = () => {
   return request('home/hot', 'get')
 }
+
+/* 获取商品区块数据 */ 
+export const findGoods = () => {
+  return request('home/goods', 'get')
+}
+
+/* 获取最新专题数据 */ 
+export const findSpecial = () => {
+  return request('home/special', 'get')
+}
