@@ -169,7 +169,7 @@ export default {
             transition: all 0.5s;
 
             &.prev {
-                left: 270px;
+                left: 20px;
             }
 
             &.next {

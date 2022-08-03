@@ -30,6 +30,9 @@ import HomeProduct from './components/home-product.vue'
 import HomeSpecial from "./components/home-special.vue";
 </script>
 
-<style scoped lang="less">
+<style lang="less">
+    .home-entry .carousel-btn.prev {
+        left: 270px !important;
+    }
 
 </style>
