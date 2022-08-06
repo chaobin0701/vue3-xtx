@@ -9,6 +9,8 @@ import router from "@/router";
 
 // https://apipc-xiaotuxian-front.itheima.net
 // http://pcapi-xiaotuxian-front-devtest.itheima.net/
+
+export const mockUrl = "https://mock.boxuegu.com/mock/1175"
 export const baseURL = "https://apipc-xiaotuxian-front.itheima.net/";
 
 const instance = axios.create({
@@ -20,10 +22,10 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   (config) => {
+    if(config.isMock) config.baseURL = mockUrl
     // 拦截业务逻辑
     // 进行请求配置的修改
     // 如果本地有tokne,就在头部携带
-
     // 1. 获取用户信息对象
     const { profile } = store.state.user;
     // 2. 判断是否有token
@@ -63,8 +65,8 @@ instance.interceptors.response.use((res) => {
 );
 
 // 请求工具函数
-export default (url, method, submitData) => {
-  // 负责发请求:请求地址/请求方式/提交的数据
+export default (url, method, submitData,isMock=false) => {
+  // 负责发请求:请求地址/请求方式/提交的数据]
   return instance({
     url,
     method,
@@ -74,5 +76,6 @@ export default (url, method, submitData) => {
     // method参数：get,Get,GET  转换成小写再来判断
     // 在对象，['params']:submitData ===== params:submitData 这样理解
     [method.toLowerCase() === "get" ? "params" : "data"]: submitData,
+    isMock
   });
 };

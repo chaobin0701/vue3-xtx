@@ -1,6 +1,6 @@
 <template>
     <div class="goods-item">
-        <router-link to="/" class="image">
+        <router-link :to="`/product/${goods.id}`" class="image">
             <img alt="" v-lazyload="goods.picture"/>
         </router-link>
         <p class="name ellipsis-2">{{goods.name}}</p>

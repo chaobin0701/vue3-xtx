@@ -3,13 +3,13 @@
     <HomePanel :title="cate.name" v-for="cate in list" :key="cate.id">
         <template #right>
             <div class="sub">
-                <router-link v-for="sub in cate.children" :key="sub.id"  to="/">{{sub.name}}</router-link>
+                <router-link v-for="sub in cate.children" :key="sub.id"  :to="`/category/sub/${sub.id}`"> {{sub.name}}</router-link>
             </div>
             <XtxMore></XtxMore>
         </template>
         <template #main>
             <div class="box">
-            <router-link to="/" class="cover">
+            <router-link :to="`/category/${cate.id}`" class="cover">
                 <img alt=""  v-lazyload="cate.picture" />
                 <strong class="label">
                     <span>{{cate.name}}</span>
