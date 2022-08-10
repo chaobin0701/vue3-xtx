@@ -21,7 +21,7 @@
           <GoodsSku :goods="goods" @change="changeSku" />
           <!-- 数量选择 -->
           <XtxNumbox label="数量" v-model="num" :max="goods.inventory" />
-          <XtxButton type="primary" style="margin-top:20px;">加入购物车</XtxButton>
+          <XtxButton type="primary" style="margin-top:20px;" @click="insertCart()">加入购物车</XtxButton>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -54,10 +54,12 @@ import GoodsTabs from './components/goods-tabs.vue'
 import GoodsHot from './components/goods-hot.vue'
 import GoodsWarn from './components/goods-warn.vue'
 
-import { nextTick, ref, watch,provide} from 'vue';
+import { nextTick, ref, watch,provide , getCurrentInstance} from 'vue';
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex'
 
+const store = useStore()
 const useGoods = () => {
   // 出现路由地址商品ID发生变化,但是不会重新初始化组件
   const goods = ref(null)
@@ -91,12 +93,43 @@ const changeSku = (sku) => {
     goods.value.price = sku.price
     goods.value.oldPrice = sku.oldPrice
     goods.value.inventory = sku.inventory
+    currSku.value = sku
+  } else {
+    currSku.value = null
   }
 }
 
 // 选择的数量
 const num = ref(1)
 
+// 加入购物车逻辑
+let currSku = ref(null)
+const instance = getCurrentInstance()
+const insertCart = () => {
+  // 约定加入购物车字段必须和后端保持一致
+  // 他们是：id skuId name picture price nowPrice count attrsText selected stock isEffective
+  if (!currSku.value){
+    return instance.proxy.$message('请选择商品规格')
+  }
+  if(num.value > goods.inventory){
+    return instance.proxy.$message('库存不足')
+  }
+  store.dispatch('cart/insert',{
+    id:goods.value.id,
+    skuId:currSku.value.skuId,
+    name: goods.value.name,
+    picture: goods.value.mainPictures[0],
+    price: currSku.value.price,
+    nowPrice: currSku.value.price,
+    count: num.value,
+    attrsText: currSku.value.specsText,
+    selected: true,
+    isEffective: true,
+    stock: currSku.value.inventory
+  }).then(() => {
+    instance.proxy.$message('加入购物车成功','success')
+  })
+}
 
 </script>
     

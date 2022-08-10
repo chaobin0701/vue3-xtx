@@ -8,6 +8,7 @@ export default {
       // 用户信息
       profile: {
         id: '',
+        account:'',
         avatar: '',
         nickname: 'SuperBin',
         account: '',
@@ -17,8 +18,9 @@ export default {
     }
   },
   mutations: {
-    setName (state, newName) {
-      state.profile.nickname = newName
-    }
+    // 修改用户信息，payload就是用户信息对象
+    setUser (state, payload) {
+      state.profile = payload
+    },
   }
 }
