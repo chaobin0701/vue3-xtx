@@ -109,12 +109,12 @@ const insertCart = () => {
   // 约定加入购物车字段必须和后端保持一致
   // 他们是：id skuId name picture price nowPrice count attrsText selected stock isEffective
   if (!currSku.value){
-    return instance.proxy.$message('请选择商品规格')
+    return instance.proxy.$message({text:'请选择商品规格'})
   }
   if(num.value > goods.inventory){
-    return instance.proxy.$message('库存不足')
+    return instance.proxy.$message({text:'库存不足'})
   }
-  store.dispatch('cart/insert',{
+  store.dispatch('cart/insertCart',{
     id:goods.value.id,
     skuId:currSku.value.skuId,
     name: goods.value.name,
@@ -127,7 +127,7 @@ const insertCart = () => {
     isEffective: true,
     stock: currSku.value.inventory
   }).then(() => {
-    instance.proxy.$message('加入购物车成功','success')
+    return instance.proxy.$message({text:'加入购物车成功',type:'success'})
   })
 }
 
