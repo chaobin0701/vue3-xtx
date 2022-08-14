@@ -33,11 +33,7 @@ export default {
       // 1.goods中必须有skuId,才能找到对应的商品信息
       const updateGoods = state.list.find((item) => item.skuId === goods.skuId);
       for (const key in goods) {
-        if (
-          goods[key] !== null &&
-          goods[key] !== undefined &&
-          goods[key] !== ""
-        ) {
+        if (goods[key] !== null && goods[key] !== undefined && goods[key] !== "") {
           updateGoods[key] = goods[key];
         }
       }
@@ -92,6 +88,70 @@ export default {
           // 本地
           ctx.commit('deleteCart',skuId)
           resolve()
+        }
+      })
+    },
+    // 修改购物车商品
+    updateCart(ctx,goods){
+      // goods中,必须有skuId,其他想修改的属性 selected count
+      return new Promise((resolve,reject) => {
+        if(ctx.rootState.user.profile.token){
+          // 登陆TODO
+        } else {
+          // 本地
+          ctx.commit('updateCart',goods)
+          resolve
+        }
+      })
+    },
+    // 做有效商品的全选&反选
+    checkAllCart(ctx,selected){
+      return new Promise((resolve,reject) => {
+        if(ctx.rootState.user.profile.token){
+          // 登陆TODO
+        } else {
+          // 本地
+          // 1.获取有效的商品列表,遍历的去调用修改mutations即可
+          ctx.getters.validList.forEach(item => {
+            ctx.commit('updateCart',{skuId:item.skuId,selected})
+          })
+          
+        }
+        resolve
+      })
+    },
+    // 批量删除选中的商品
+    batchDeleteCart(ctx,isClear){
+      return new Promise((resolve,reject) => {
+        if(ctx.rootState.user.profile.token){
+          // 以登录
+        } else {
+          // 本地
+          // 1.获取选中商品列表,进行遍历调用deleteCart mutations函数
+          ctx.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
+            ctx.commit('deleteCart',item.skuId)
+          })
+          resolve()
+        }
+      })
+    },
+    // 修改sku规格函数 
+    updateCartSku(ctx,{oldSkuId,newSku}) {
+      return new Promise((resolve,reject) => {
+        if(ctx.rootState.user.profile.token) {
+          // 登陆TODO
+        } else {
+          // 本地
+          // 但你修改了sku的时候其实skuId需要更改,相当于把原来的信息移除,创建一条新的商品信息
+          // 1.获取旧的商品信息
+          const oldGoods = ctx.state.list.find(item => item.skuId === oldSkuId)
+          // 2.删除旧的商品
+          ctx.commit('deleteCart',oldSkuId)
+          // 3.合并一条新的商品信息
+          const { skuId, price: nowPrice, inventory: stock, specsText: attrsText } = newSku
+          const newGoods = { ...oldGoods, skuId, nowPrice, stock, attrsText }
+          // 去插入即可
+          ctx.commit('insertCart', newGoods)
         }
       })
     }

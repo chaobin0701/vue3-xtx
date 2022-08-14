@@ -3,6 +3,7 @@
 // vue2.0插件写法要素：导出一个对象，有install函数，默认传入了Vue构造函数，Vue基础之上扩展
 // vue3.0插件写法要素：导出一个对象，有install函数，默认传入了app应用实例，app基础之上扩展
 import Message from './Message'
+import Confirm from './confirm'
 // 导入library文件夹下的所有组件
 // 批量导入需要使用一个函数 require.context(dir,deep,matching)
 // 参数：1. 目录  2. 是否加载子目录  3. 加载的正则匹配
@@ -47,6 +48,7 @@ export default {
         // 自定指令
         defineDirective(app)
         // 如果你想挂载全局的属性，能够通过组件实例调用的属性   this.$message
-        app.config.globalProperties.$message = Message// 原型函数
+        app.config.globalProperties.$message = Message // 原型函数
+        app.config.globalProperties.$confirm = Confirm
     }
 }
