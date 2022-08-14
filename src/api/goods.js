@@ -40,3 +40,13 @@ export const findGoodsCommentList = (id, params) => {
 export const getSpecsAndSkus  = (skuId) => {
     return request(`/goods/sku/${skuId}`, 'get')
 }
+
+/**
+ * 加入购物车
+ * @param {String} skuId - 商品SKUID
+ * @param {Integer} count - 商品数量
+ * @returns Promise
+ */
+ export const insertCart = ({ skuId, count }) => {
+  return request('/member/cart', 'post', { skuId, count })
+}

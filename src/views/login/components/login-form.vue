@@ -133,7 +133,7 @@ const login = async () => {
         try {
             if (!!isMsgLogin) {
                 // 账号密码登陆
-                 data = await userAccountLogin(form)
+                data = await userAccountLogin(form)
             } else {
                 // 短信登录
                 // 1.定义两个API 短信登录 获取短信验证码
@@ -146,13 +146,15 @@ const login = async () => {
         }
         // 成功
         // 1.存储信息
-        console.log(data)
         const { id, account, nickname, avatar, token, mobile } = data.result
         store.commit('user/setUser', { id, account, nickname, avatar, token, mobile })
-        // 2.提示
-        Message({ type: 'success', text: '登录成功' })
-        // 3. 跳转
-        router.push(route.query.redirectUrl || '/')
+        // 合并购物车操作
+        store.dispatch('cart/mergeLocalCart').then(() => {
+            // 2.提示
+            Message({ type: 'success', text: '登录成功' })
+            // 3.跳转
+            router.push(route.query.redirectUrl || '/')
+        })
     }
 }
 
@@ -186,6 +188,9 @@ const send = async () => {
         formCom.value.setFieldError('mobile', valid)
     }
 }
+
+
+
 </script>
     
 <style lang="less" scoped>

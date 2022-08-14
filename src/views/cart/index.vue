@@ -91,14 +91,14 @@
       <div class="action">
         <div class="batch">
           <XtxCheckbox :modelValue="$store.getters['cart/isCheckAll']" @change="checkAll">全选</XtxCheckbox>
-          <a href="javascript:;" @click="batchDeleteCart">删除商品</a>
+          <a href="javascript:;" @click="batchDeleteCart(false)">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
           <a href="javascript:;" @click="batchDeleteCart(true)">清空失效商品</a>
         </div>
         <div class="total">
           共 {{ $store.getters['cart/validTotal'] }} 件商品，已选择 {{ $store.getters['cart/selectedTotal'] }} 件，商品合计：
           <span class="red">¥{{ $store.getters['cart/selectedAmount'] }}</span>
-          <XtxButton type="primary">下单结算</XtxButton>
+          <XtxButton type="primary" @click="goCheckout()">下单结算</XtxButton>
         </div>
       </div>
       <!-- 猜你喜欢 -->
@@ -113,6 +113,8 @@ import CartSku from './components/cart-sku'
 import CartNone from './components/cart-none.vue'
 import confirm from '@/components/library/confirm'
 import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
+import { useRouter } from 'vue-router'
 const store = useStore()
 // 单选商品
 const checkOne = (skuId, selected) => {
@@ -144,7 +146,28 @@ const changeCount = (skuId, count) => {
 }
 // 修改规格
 const updateCartSku = (oldSkuId, newSku) => {
+  console.log('修改啦')
   store.dispatch('cart/updateCartSku', { oldSkuId, newSku })
+}
+
+// 跳转结算页面
+const router = useRouter()
+const goCheckout = () => {
+  // 1.判断是否选择有效商品
+  // 2.判断是否已经登陆,未登录 弹窗提示
+  // 3.进行跳转
+  if(store.getters['cart/selectedTotal'] === 0) return Message({ text: '至少选中一件商品才能结算' })
+  if(!store.state.user.profile.token){
+    confirm({ text: '下单结算需要登录，您是否去登录？' }).then(() => {
+      // 点击确认
+      router.push('/member/checkout')
+    }).catch(e => {
+      console.log('取消跳转')
+    })
+  } else {
+    // 以登录,跳转至结算页面
+    router.push('/member/checkout')
+  }
 }
 </script>
     

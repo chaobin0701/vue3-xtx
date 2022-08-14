@@ -37,8 +37,11 @@ export default {
         const profile = computed(() => {
             return store.state.user.profile
         })
+        // 退出登录
         const logout = () => {
             store.commit('user/setUser', {})
+            // 清空购物车
+            store.commit('cart/setCartList',[])
             router.push('/login')
         }
         return { profile, logout }
