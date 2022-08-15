@@ -5,7 +5,7 @@ const Home = () => import("@/views/home");
 const Goods = () => import("@/views/goods");
 const Login = () => import("@/views/login");
 const Cart = () => import("@/views/cart");
-
+const PayCheckout = () => import('@/views/member/pay/checkout')
 
 import TopCategory from "@/views/category";
 import SubCategory from "@/views/category/sub-category";
@@ -31,6 +31,9 @@ const routes = [
   },{
     path: "/cart",
     component: Cart,
+  },{ 
+    path: '/member/checkout',
+     component: PayCheckout 
   }
 ];
 
