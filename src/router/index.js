@@ -5,7 +5,10 @@ const Home = () => import("@/views/home");
 const Goods = () => import("@/views/goods");
 const Login = () => import("@/views/login");
 const Cart = () => import("@/views/cart");
+const PayIndex = () => import('@/views/member/pay/index')
 const PayCheckout = () => import('@/views/member/pay/checkout')
+const PayResult = () => import('@/views/member/pay/result')
+
 
 import TopCategory from "@/views/category";
 import SubCategory from "@/views/category/sub-category";
@@ -23,6 +26,9 @@ const routes = [
       { path: "/category/:id", component: TopCategory },
       { path: "/category/sub/:id", component: SubCategory },
       { path: "/product/:id", component: Goods },
+      { path: '/member/checkout', component: PayCheckout },
+      { path: '/member/pay', component: PayIndex },
+      { path: '/pay/callback', component: PayResult }
     ],
   },
   {
@@ -31,9 +37,6 @@ const routes = [
   },{
     path: "/cart",
     component: Cart,
-  },{ 
-    path: '/member/checkout',
-     component: PayCheckout 
   }
 ];
 

@@ -10,7 +10,7 @@
                 <!-- 收货地址 -->
                 <h3 class="box-title">收货地址</h3>
                 <div class="box-body">
-                    <CheckoutAddress  @change="changeAddress" :list="checkoutInfo.userAddresses" ></CheckoutAddress>
+                    <CheckoutAddress @change="changeAddress" :list="checkoutInfo.userAddresses"></CheckoutAddress>
                 </div>
                 <!-- 商品信息 -->
                 <h3 class="box-title">商品信息</h3>
@@ -29,18 +29,17 @@
                             <tr v-for="item in checkoutInfo.goods" :key="item.id">
                                 <td>
                                     <a href="javascript:;" class="info">
-                                        <img :src="item.picture"
-                                            alt="">
+                                        <img :src="item.picture" alt="">
                                         <div class="right">
-                                            <p>{{item.name}}</p>
-                                            <p>{{item.attrsText}}</p>
+                                            <p>{{ item.name }}</p>
+                                            <p>{{ item.attrsText }}</p>
                                         </div>
                                     </a>
                                 </td>
-                                <td>&yen;{{item.payPrice}}</td>
-                                <td>{{item.count}}</td>
-                                <td>&yen;{{item.totalPrice}}</td>
-                                <td>&yen;{{item.totalPayPrice}}</td>
+                                <td>&yen;{{ item.payPrice }}</td>
+                                <td>{{ item.count }}</td>
+                                <td>&yen;{{ item.totalPrice }}</td>
+                                <td>&yen;{{ item.totalPayPrice }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -65,25 +64,25 @@
                     <div class="total">
                         <dl>
                             <dt>商品件数：</dt>
-                            <dd>{{checkoutInfo.summary.goodsCount}}件</dd>
+                            <dd>{{ checkoutInfo.summary.goodsCount }}件</dd>
                         </dl>
                         <dl>
                             <dt>商品总价：</dt>
-                            <dd>¥{{checkoutInfo.summary.totalPrice}}</dd>
+                            <dd>¥{{ checkoutInfo.summary.totalPrice }}</dd>
                         </dl>
                         <dl>
                             <dt>运<i></i>费：</dt>
-                            <dd>¥{{checkoutInfo.summary.postFee}}</dd>
+                            <dd>¥{{ checkoutInfo.summary.postFee }}</dd>
                         </dl>
                         <dl>
                             <dt>应付总额：</dt>
-                            <dd class="price">¥{{checkoutInfo.summary.totalPayPrice}}</dd>
+                            <dd class="price">¥{{ checkoutInfo.summary.totalPayPrice }}</dd>
                         </dl>
                     </div>
                 </div>
                 <!-- 提交订单 -->
                 <div class="submit">
-                    <XtxButton type="primary">提交订单</XtxButton>
+                    <XtxButton @click="submitOrder" type="primary">提交订单</XtxButton>
                 </div>
             </div>
         </div>
@@ -92,16 +91,29 @@
     
 <script setup>
 import CheckoutAddress from './components/checkout-address'
-import { findCheckoutInfo } from '@/api/order'
-import { ref , reactive } from 'vue'
+import { findCheckoutInfo , createOrder } from '@/api/order'
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import Message from '@/components/library/Message'
 const checkoutInfo = ref(null)
-findCheckoutInfo().then( data => {
+findCheckoutInfo().then(data => {
     checkoutInfo.value = data.result
+    // 设置提交时候的商品
+    requestParams.goods = checkoutInfo.value.goods.map(item => {
+        return {
+            skuId: item.skuId,
+            count: item.count
+        }
+    })
 })
 
 // 需要提交的字符
 const requestParams = reactive({
-    addressId:null
+    addressId: null,
+    deliveryTimeType: 1,
+    payType: 1,
+    buyerMessage: '',
+    goods: []
 })
 
 // 切换地址
@@ -109,102 +121,132 @@ const changeAddress = (id) => {
     requestParams.addressId = id
 }
 
+// 提交订单
+const router = useRouter()
+const submitOrder = () => {
+    if (!requestParams.addressId) return Message({ text: '请选择收货地址' })
+    createOrder(requestParams).then(data => {
+       router.push(`/member/pay?orderId=${data.result.id}`)
+    })
+}
+
+
 </script>
     
 <style scoped lang="less">
 .xtx-pay-checkout-page {
-  .wrapper {
-    background: #fff;
-    padding: 0 20px;
-    .box-title {
-      font-size: 16px;
-      font-weight: normal;
-      padding-left: 10px;
-      line-height: 70px;
-      border-bottom: 1px solid #f5f5f5;
-    }
-    .box-body {
-      padding: 20px 0;
-    }
-  }
-}
-.goods {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-  .info {
-    display: flex;
-    text-align: left;
-    img {
-      width: 70px;
-      height: 70px;
-      margin-right: 20px;
-    }
-    .right {
-      line-height: 24px;
-      p {
-        &:last-child {
-          color: #999;
+    .wrapper {
+        background: #fff;
+        padding: 0 20px;
+
+        .box-title {
+            font-size: 16px;
+            font-weight: normal;
+            padding-left: 10px;
+            line-height: 70px;
+            border-bottom: 1px solid #f5f5f5;
         }
-      }
+
+        .box-body {
+            padding: 20px 0;
+        }
     }
-  }
-  tr {
-    th {
-      background: #f5f5f5;
-      font-weight: normal;
-    }
-    td,th {
-      text-align: center;
-      padding: 20px;
-      border-bottom: 1px solid #f5f5f5;
-      &:first-child {
-        border-left: 1px solid #f5f5f5;
-      }
-      &:last-child {
-        border-right: 1px solid #f5f5f5;
-      }
-    }
-  }
 }
+
+.goods {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    .info {
+        display: flex;
+        text-align: left;
+
+        img {
+            width: 70px;
+            height: 70px;
+            margin-right: 20px;
+        }
+
+        .right {
+            line-height: 24px;
+
+            p {
+                &:last-child {
+                    color: #999;
+                }
+            }
+        }
+    }
+
+    tr {
+        th {
+            background: #f5f5f5;
+            font-weight: normal;
+        }
+
+        td,
+        th {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid #f5f5f5;
+
+            &:first-child {
+                border-left: 1px solid #f5f5f5;
+            }
+
+            &:last-child {
+                border-right: 1px solid #f5f5f5;
+            }
+        }
+    }
+}
+
 .my-btn {
-  width: 228px;
-  height: 50px;
-  border: 1px solid #e4e4e4;
-  text-align: center;
-  line-height: 48px;
-  margin-right: 25px;
-  color: #666666;
-  display: inline-block;
-  &.active,&:hover {
-    border-color: @xtxColor;
-  }
+    width: 228px;
+    height: 50px;
+    border: 1px solid #e4e4e4;
+    text-align: center;
+    line-height: 48px;
+    margin-right: 25px;
+    color: #666666;
+    display: inline-block;
+
+    &.active,
+    &:hover {
+        border-color: @xtxColor;
+    }
 }
+
 .total {
-  dl {
-    display: flex;
-    justify-content: flex-end;
-    line-height: 50px;
-    dt {
-      i {
-        display: inline-block;
-        width: 2em;
-      }
+    dl {
+        display: flex;
+        justify-content: flex-end;
+        line-height: 50px;
+
+        dt {
+            i {
+                display: inline-block;
+                width: 2em;
+            }
+        }
+
+        dd {
+            width: 240px;
+            text-align: right;
+            padding-right: 70px;
+
+            &.price {
+                font-size: 20px;
+                color: @priceColor;
+            }
+        }
     }
-    dd {
-      width: 240px;
-      text-align: right;
-      padding-right: 70px;
-      &.price {
-        font-size: 20px;
-        color: @priceColor;
-      }
-    }
-  }
 }
+
 .submit {
-  text-align: right;
-  padding: 60px;
-  border-top: 1px solid #f5f5f5;
+    text-align: right;
+    padding: 60px;
+    border-top: 1px solid #f5f5f5;
 }
 </style>

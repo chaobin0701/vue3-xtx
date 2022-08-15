@@ -12,6 +12,7 @@ import router from "@/router";
 
 export const mockUrl = "https://mock.boxuegu.com/mock/1175"
 export const baseURL = "https://apipc-xiaotuxian-front.itheima.net/";
+export const basePayURL = 'https://apipc-xiaotuxian-front.itheima.net/'
 
 const instance = axios.create({
   // axios 的一些配置,baseURL timeout

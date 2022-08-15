@@ -62,6 +62,10 @@ const openDialog = () => {
     dialogVisible.value = true
     selectedAddress.value = null
 }
+
+
+
+
 // 确认地址
 const confirmAddress = () => {
     dialogVisible.value = false
@@ -82,6 +86,13 @@ const openAddressEdit = (address) => {
 
 // 接受添加成功的地址对象
 const successHandler = ( formData) => {
+    const editAddress = props.list.find(item => item.id === formData.id)
+    if(editAddress){
+        // 修改
+        for(const key in editAddress){
+            editAddress[key] = formData[key]
+        }
+    }
     const json =  JSON.stringify(formData)  // 需要克隆下，不然使用的是对象的引用
     props.list.unshift(JSON.parse(json))
 }
