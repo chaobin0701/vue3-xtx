@@ -7,6 +7,7 @@ import ui from './components/library'
 import 'normalize.css'
 // 自己项目的重置样式和公共样式
 import '@/assets/styles/common.less'
+import './mock'
 
 const app = createApp(App)
 app.use(router).use(store).use(ui).mount('#app')
