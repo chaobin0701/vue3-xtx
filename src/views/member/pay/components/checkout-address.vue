@@ -16,9 +16,7 @@
         <!-- 切换收货地址弹窗 -->
         <XtxDialog title="切换收货地址" v-model:visible="dialogVisible">
             <div class="text item" v-for="item in list" :key="item.id"
-             :class="{active:selectedAddress&&item.id===selectedAddress.id}"
-            @click="selectedAddress=item"
-            >
+                :class="{ active: selectedAddress && item.id === selectedAddress.id }" @click="selectedAddress = item">
                 <ul>
                     <li><span>联系方式：</span>{{ item.contact }}</li>
                     <li><span>联系方式：</span>{{ item.contact }}</li>
@@ -27,7 +25,7 @@
             </div>
             <template v-slot:footer>
                 <XtxButton @click="dialogVisible = false" type="gray" style="margin-right:20px">取消</XtxButton>
-                <XtxButton  @click="confirmAddress()" type="primary">确认</XtxButton>
+                <XtxButton @click="confirmAddress()" type="primary">确认</XtxButton>
             </template>
         </XtxDialog>
         <!-- 添加地址弹窗 -->
@@ -64,13 +62,15 @@ const openDialog = () => {
 }
 
 
+// 默认通知父组件一个收货地址ID
+emit('change', showAddress.value && showAddress.value.id)
 
 
 // 确认地址
 const confirmAddress = () => {
     dialogVisible.value = false
     showAddress.value = selectedAddress.value
-    // 默认通知一个地址ID给父
+    // 通知一个地址ID给父
     emit('change', showAddress.value?.id)
 }
 
@@ -85,15 +85,15 @@ const openAddressEdit = (address) => {
 }
 
 // 接受添加成功的地址对象
-const successHandler = ( formData) => {
+const successHandler = (formData) => {
     const editAddress = props.list.find(item => item.id === formData.id)
-    if(editAddress){
+    if (editAddress) {
         // 修改
-        for(const key in editAddress){
+        for (const key in editAddress) {
             editAddress[key] = formData[key]
         }
     }
-    const json =  JSON.stringify(formData)  // 需要克隆下，不然使用的是对象的引用
+    const json = JSON.stringify(formData)  // 需要克隆下，不然使用的是对象的引用
     props.list.unshift(JSON.parse(json))
 }
 </script>

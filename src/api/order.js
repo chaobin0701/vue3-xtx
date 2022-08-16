@@ -59,3 +59,39 @@ export const findCheckoutInfo = () => {
  export const cancelOrder = (orderId, cancelReason) => {
   return request(`/member/order/${orderId}/cancel`, 'put', { cancelReason })
 }
+
+/**
+ * 删除订单
+ * @param {Array<string>} ids - 删除订单，id集合
+ * @returns
+ */
+ export const delteOrder = (ids) => {
+  return request('/member/order', 'delete', { ids })
+}
+
+/**
+ * 确认收货
+ * @param {String} orderId - 订单ID
+ * @returns
+ */
+ export const confirmOrder = (orderId) => {
+  return request(`/member/order/${orderId}/receipt`, 'put')
+}
+
+/**
+ * 查询物流
+ * @param {String} orderId - 订单ID
+ * @returns
+ */
+export const logisticsOrder = (orderId) => {
+  return request(`/member/order/${orderId}/logistics`, 'get')
+}
+
+/**
+ * 获取再次购买的订单结算信息
+ * @param {String} id - 订单ID
+ * @returns
+ */
+ export const findOrderRepurchase = (id) => {
+  return request(`/member/order/repurchase/${id}`, 'get')
+}

@@ -91,29 +91,39 @@
     
 <script setup>
 import CheckoutAddress from './components/checkout-address'
-import { findCheckoutInfo , createOrder } from '@/api/order'
+import { findCheckoutInfo, createOrder, findOrderRepurchase } from '@/api/order'
 import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import Message from '@/components/library/Message'
-const checkoutInfo = ref(null)
-findCheckoutInfo().then(data => {
-    checkoutInfo.value = data.result
-    // 设置提交时候的商品
-    requestParams.goods = checkoutInfo.value.goods.map(item => {
-        return {
-            skuId: item.skuId,
-            count: item.count
-        }
-    })
-})
 
-// 需要提交的字符
+const checkoutInfo = ref(null)
+
+const route = useRoute()
+// 判断是否为再次购买
+if (route.query.orderId) {
+    //   再次购买结算
+    findOrderRepurchase(route.query.orderId).then(data => {
+        checkoutInfo.value = data.result
+        requestParams.goods = data.result.goods.map(({ skuId, count }) => ({ skuId, count }))
+    })
+} else {
+    // 购物车结算
+    findCheckoutInfo().then(data => {
+        checkoutInfo.value = data.result
+        requestParams.goods = data.result.goods.map(({ skuId, count }) => ({ skuId, count }))
+    })
+}
+
+// 结算功能-提交订单-提交信息
 const requestParams = reactive({
     addressId: null,
     deliveryTimeType: 1,
     payType: 1,
     buyerMessage: '',
-    goods: []
+    // 商品信息，获取订单信息后设置
+    goods: [],
+    // 收货地址，切换收货地址或者组件默认的时候设置
+    addressId: null
 })
 
 // 切换地址
@@ -126,7 +136,7 @@ const router = useRouter()
 const submitOrder = () => {
     if (!requestParams.addressId) return Message({ text: '请选择收货地址' })
     createOrder(requestParams).then(data => {
-       router.push(`/member/pay?orderId=${data.result.id}`)
+        router.push(`/member/pay?orderId=${data.result.id}`)
     })
 }
 
