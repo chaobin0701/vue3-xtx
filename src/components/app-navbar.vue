@@ -9,10 +9,12 @@
                     <li><a href="javascript:;" @click="logout()">退出登录</a></li>
                 </template>
                 <template v-else>
-                    <li><a href="javascript:;">请先登录</a></li>
+                    <li><router-link to="/login">请先登录</router-link></li>
                     <li><a href="javascript:;">免费注册</a></li>
                 </template>
-                <li><a href="javascript:;">我的订单</a></li>
+                <li>
+                    <a href="javascript:;" @click="toMyOrder">我的订单</a>
+                </li>
                 <li><a href="javascript:;">会员中心</a></li>
                 <li><a href="javascript:;">帮助中心</a></li>
                 <li><a href="javascript:;">关于我们</a></li>
@@ -44,7 +46,17 @@ export default {
             store.commit('cart/setCartList',[])
             router.push('/login')
         }
-        return { profile, logout }
+        // 进入购物车
+        const toMyOrder = () => {
+            if(store.state.user.profile.token){
+                // 登陆
+                router.push('/member/order')
+            } else {
+                // 未登陆
+                router.push('/login')
+            }
+        }
+        return { profile, logout,toMyOrder }
     }
 
 };

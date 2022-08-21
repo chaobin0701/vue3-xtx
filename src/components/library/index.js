@@ -8,7 +8,6 @@ import Confirm from './confirm'
 // 批量导入需要使用一个函数 require.context(dir,deep,matching)
 // 参数：1. 目录  2. 是否加载子目录  3. 加载的正则匹配
 const importFn = require.context('./', false, /\.vue$/)
-// console.dir(importFn.keys()) 文件名称数组
 
 // 指令
 // 原理:在图片可见的时候,动态的给img标签的src赋值,让元素可见的时候再去加载图片

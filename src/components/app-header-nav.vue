@@ -8,7 +8,7 @@
             <div class="layer" :class="{open:item.open}">
                 <ul>
                     <li v-for="sub in item.children" :key="sub.id">
-                        <router-link :to="sub.id ? `/category/sub/${sub.id}` : '/'" @click="hide(item)">
+                        <router-link :to="sub.id ? `/category/sub/${sub.id}` : '/'"  @click="hide(item)">
                             <img :src="sub.picture" alt="">
                             <p>{{sub.name}}</p>
                         </router-link>
@@ -37,10 +37,6 @@ export default {
         const hide = (item) => {
             store.commit('category/hide',item)
         }
-
-
-
-
         return {
             list,
             show,hide

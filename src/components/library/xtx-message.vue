@@ -1,9 +1,10 @@
 <template>
   <Transition name="down">
+     <!-- 绑定样式 -->
     <div class="xtx-message" :style="style[type]" v-show="visible">
-      <!-- 上面绑定的是样式 -->
-      <!-- 不同提示图标会变 :class="{'icon-warning':true}" :class="['icon-warning']" -->
+      <!-- 绑定图标 -->
       <i class="iconfont" :class="[style[type].icon]"></i>
+      <!-- 绑定文字 -->
       <span class="text">{{text}}</span>
     </div>
   </Transition>
@@ -13,17 +14,20 @@ import { onMounted, ref } from 'vue'
 export default {
   name: 'XtxMessage',
   props: {
-    type: {
+    type: { 
       type: String,
-      default: 'warn'
+      default: 'warn',
+      desc:'描述弹窗的状态，有三个值 warn(警告|默认) success(成功) error(错误)'
     },
     text: {
       type: String,
-      default: ''
+      default: '',
+      desc:'文本框的文字'
     }
   },
   setup () {
     // 定义一个对象，包含三种情况的样式，对象key就是类型字符串
+    // 分别对应三种不同的样式（图表、字体颜色、背景颜色、边框颜色）
     const style = {
       warn: {
         icon: 'icon-warning',
@@ -47,7 +51,7 @@ export default {
     // 控制元素显示隐藏
     const visible = ref(false)
     onMounted(() => {
-      visible.value = true
+      visible.value = true // 当组件显示加载完成，让元素进行显示
     })
     return { style, visible }
   }
@@ -56,20 +60,20 @@ export default {
 <style scoped lang="less">
 .down {
   &-enter {
-    &-from {
+    &-from {  // 进入动画的初态
       transform: translate3d(0,-75px,0);
       opacity: 0;
     }
-    &-active {
+    &-active { // 进入动画的起始状态
       transition: all 0.5s;
     }
-    &-to {
+    &-to { // 进入动画的终态
       transform: none;
       opacity: 1;
     }
   }
 }
-.xtx-message {
+.xtx-message { //基础样式
   width: 300px;
   height: 50px;
   position: fixed;

@@ -4,9 +4,9 @@
       <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <XtxBreadItem :to="'/category/' + goods.categories[0].id">{{ goods.categories[0].name }}</XtxBreadItem>
-        <XtxBreadItem :to="'/category/sub/' + goods.categories[1].id">{{ goods.categories[1].name }}</XtxBreadItem>
-        <XtxBreadItem>{{ goods.name }}</XtxBreadItem>
+        <XtxBreadItem :to="'/category/' + goods.categories[1].id">{{ goods.categories[1].name }}</XtxBreadItem>        
+        <XtxBreadItem :to="'/category/sub/' + goods.categories[0].id">{{ goods.categories[0].name }}</XtxBreadItem>
+        <XtxBreadItem :to="'/product/' + goods.id">{{ goods.name }}</XtxBreadItem>
       </XtxBread>
       <!-- 商品信息 -->
       <div class="goods-info">
@@ -63,6 +63,7 @@ const store = useStore()
 const useGoods = () => {
   // 出现路由地址商品ID发生变化,但是不会重新初始化组件
   const goods = ref(null)
+  console.log(goods)
   provide('goods', goods)
   const route = useRoute()
   watch(() => route.params.id, (newVal) => {

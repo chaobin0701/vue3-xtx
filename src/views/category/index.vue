@@ -39,7 +39,6 @@
     
 <script setup>
 import GoodsItem from './components/goods-item.vue'
-import SubBread from './components/sub-bread.vue'
 import { findBanner } from '@/api/home'
 import { findTopCategory } from '@/api/category'
 import { useStore } from 'vuex'
